@@ -8,4 +8,3 @@
   template:
     src: ../templates/docker-compose.yml.j2
     dest: "{{ output_path }}/docker-compose.yml"
-  delegate_to: localhost
