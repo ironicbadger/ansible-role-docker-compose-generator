@@ -1,0 +1,55 @@
+# {{ ansible_managed }}
+---
+version: "2"
+services:
+{% for item in containers %}
+{% if item.active %}
+  {{ item.service_name }}:
+    image: {{ item.image }}
+    container_name: {{ item.container_name }}
+{% if item.network_mode is defined %}
+    network_mode: {{ item.network_mode }}
+{% endif %}
+{% if item.volumes is defined %}
+    volumes:
+{% for item in item.volumes %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% if item.ports is defined %}
+    ports:
+{% for item in item.ports %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% if ( item.environment is defined ) or ( item.include_global_env_vars ) %}
+    environment:
+{% if item.include_global_env_vars %}
+{% for item2 in global_env_vars %}
+      - {{ item2 }}
+{% endfor %}
+{% endif %}
+{% if item.environment is defined %}
+{% for item in item.environment %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if item.depends_on is defined %}
+    depends_on:
+{% for item in item.depends_on %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% if item.hostname is defined %}
+    hostname: {{ item.hostname }}
+{% endif %}
+{% if item.mem_limit is defined %}
+    mem_limit: {{ item.mem_limit }}
+{% endif %}
+{% if item.restart is defined %}
+    restart: {{ item.restart }}
+{% endif %}
+
+{% endif %}
+{% endfor %}

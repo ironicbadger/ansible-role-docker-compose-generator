@@ -1,0 +1,3 @@
+---
+output_path: output/
+include_global_env_vars: false

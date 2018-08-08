@@ -1,0 +1,11 @@
+---
+- name: create destination dir for generated readme
+  file:
+    path: "{{ output_path }}"
+    state: directory
+
+- name: write docker-compose file
+  template:
+    src: ../templates/docker-compose.yml.j2
+    dest: "{{ output_path }}/docker-compose.yml"
+  delegate_to: localhost
