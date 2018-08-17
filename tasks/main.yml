@@ -8,3 +8,5 @@
   template:
     src: ../templates/docker-compose.yml.j2
     dest: "{{ output_path }}/docker-compose.yml"
+    owner: "{{ docker_compose_generator_uid }}"
+    group: "{{ docker_compose_generator_gid }}"
