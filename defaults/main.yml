@@ -4,3 +4,6 @@ include_global_env_vars: false
 
 docker_compose_generator_uid: ""
 docker_compose_generator_gid: ""
+
+docker_compose_generator_rp_enabled: false
+docker_compose_generator_rp_type: ""
