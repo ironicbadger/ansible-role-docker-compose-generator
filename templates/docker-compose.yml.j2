@@ -22,12 +22,6 @@ services:
       - {{ item }}
 {% endfor %}
 {% endif %}
-{% if item.labels is defined %}}
-    labels:
-{% for item in item.labels %}
-      - "{{ item }}"
-{% endfor %}
-{% endif %}
 {% if ( item.environment is defined ) or ( item.include_global_env_vars ) %}
     environment:
 {% if item.include_global_env_vars %}
@@ -61,6 +55,9 @@ services:
 {% for item in item.cap_add %}
       - {{ item }}
 {% endfor %}
+{% endif %}
+{% if item.command is defined %}
+    command: {{ item.command }}
 {% endif %}
 {% if item.security_opt is defined %}
     security_opt:

@@ -1,12 +1,12 @@
 ---
-- name: create destination dir for generated docker-compose.yml
+- name: create destination dir for generated readme
   file:
-    path: "{{ docker_compose_generator_output_path }}"
+    path: "{{ output_path }}"
     state: directory
 
 - name: write docker-compose file
   template:
     src: ../templates/docker-compose.yml.j2
-    dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
+    dest: "{{ output_path }}/docker-compose.yml"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
