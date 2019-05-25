@@ -50,5 +50,20 @@ services:
 {% if item.restart is defined %}
     restart: {{ item.restart }}
 {% endif %}
+{% if item.cap_add is defined %}
+    cap_add: 
+{% for item in item.cap_add %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
+{% if item.command is defined %}
+    command: {{ item.command }}
+{% endif %}
+{% if item.security_opt is defined %}
+    security_opt:
+{% for item in item.security_opt %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
