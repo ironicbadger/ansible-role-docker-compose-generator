@@ -65,5 +65,8 @@ services:
       - {{ item }}
 {% endfor %}
 {% endif %}
+{% if item.shm_size is defined %}
+    shm_size: {{ item.shm_size }}
+{% endif %}
 {% endif %}
 {% endfor %}
