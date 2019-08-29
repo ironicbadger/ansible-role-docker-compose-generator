@@ -68,5 +68,11 @@ services:
 {% if item.shm_size is defined %}
     shm_size: {{ item.shm_size }}
 {% endif %}
+{% if item.dns is defined %}
+    dns:
+{% for item in item.dns %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
