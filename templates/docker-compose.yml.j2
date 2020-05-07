@@ -7,6 +7,12 @@ services:
   {{ container.service_name }}:
     image: {{ container.image }}
     container_name: {{ container.container_name }}
+{% if container.extra_hosts is defined %}
+    extra_hosts:
+{% for extra_host in extra_hosts %}
+      - {{ extra_host }}
+{% endfor %}
+{% endif %}
 {% if container.network_mode is defined %}
     network_mode: {{ container.network_mode }}
 {% endif %}
