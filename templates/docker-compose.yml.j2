@@ -16,6 +16,12 @@ services:
       - {{ item }}
 {% endfor %}
 {% endif %}
+{% if item.labels is defined %}
+    labels:
+{% for label in item.labels %}
+      - {{ label }}
+{% endfor %}
+{% endif %}
 {% if item.ports is defined %}
     ports:
 {% for item in item.ports %}
