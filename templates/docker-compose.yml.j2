@@ -34,7 +34,7 @@ services:
       - {{ port }}
 {% endfor %}
 {% endif %}
-{% if ( container.environment is defined ) or ( container.include_global_env_vars ) %}
+{% if ( container.environment is defined ) or ( container.include_global_env_vars is defined and container.include_global_env_vars) %}
     environment:
 {% if container.include_global_env_vars %}
 {% for global_var in global_env_vars %}
