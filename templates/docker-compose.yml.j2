@@ -69,7 +69,10 @@ services:
 {% endfor %}
 {% endif %}
 {% if container.command is defined %}
-    command: {{ container.command }}
+    command:
+{% for command in container.command %}
+      - {{ command }}
+{% endfor %}
 {% endif %}
 {% if container.security_opt is defined %}
     security_opt:
