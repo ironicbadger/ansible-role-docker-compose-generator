@@ -6,11 +6,11 @@ services:
 {% if container.active %}
   {{ container.service_name }}:
     image: {{ container.image }}
-    container_name: {{ container.container_name }}
+    container_name: {{ container.container_name | default(container.service_name) }}
 {% if container.extra_hosts is defined %}
     extra_hosts:
-{% for extra_host in extra_hosts %}
-      - {{ extra_host }}
+{% for host in container.extra_hosts %}
+      - {{ host }}
 {% endfor %}
 {% endif %}
 {% if container.network_mode is defined %}
@@ -36,7 +36,7 @@ services:
 {% endif %}
 {% if ( container.environment is defined ) or ( container.include_global_env_vars is defined and container.include_global_env_vars) %}
     environment:
-{% if container.include_global_env_vars %}
+{% if container.include_global_env_vars | default(false) %}
 {% for global_var in global_env_vars %}
       - {{ global_var }}
 {% endfor %}
