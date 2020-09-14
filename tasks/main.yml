@@ -1,5 +1,5 @@
 ---
-- name: create destination dir for generated readme
+- name: ensure destination for compose file exists
   file:
     path: "{{ docker_compose_generator_output_path }}"
     state: directory
