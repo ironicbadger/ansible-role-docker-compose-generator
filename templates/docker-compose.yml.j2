@@ -30,6 +30,7 @@ services:
 {% for device in container.devices %}
       - {{ device }}
 {% endfor %}
+{% endif %}
 {% if container.volumes is defined %}
     volumes:
 {% for volume in container.volumes %}
