@@ -74,9 +74,6 @@ services:
 {% if container.mem_limit is defined %}
     mem_limit: {{ container.mem_limit }}
 {% endif %}
-{% if container.restart is defined %}
-    restart: {{ container.restart }}
-{% endif %}
 {% if container.command is defined %}
     command:
 {% for command in container.command %}
@@ -89,6 +86,12 @@ services:
       - {{ sec_opt }}
 {% endfor %}
 {% endif %}
+{% if container.sysctl is defined %}
+    sysctls:
+{% for param in container.sysctl %}
+      - {{ param }}
+{% endfor %}
+{% endif %}
 {% if container.shm_size is defined %}
     shm_size: {{ container.shm_size }}
 {% endif %}
@@ -97,6 +100,9 @@ services:
 {% for dns_entry in container.dns %}
       - {{ dns_entry }}
 {% endfor %}
+{% endif %}
+{% if container.restart is defined %}
+    restart: {{ container.restart }}
 {% endif %}
 {% endif %}
 {% endfor %}
