@@ -25,6 +25,12 @@ services:
       - {{ cap }}
 {% endfor %}
 {% endif %}
+{% if container.group_add is defined %}
+    group_add: 
+{% for group in container.group_add %}
+      - {{ group }}
+{% endfor %}
+{% endif %}
 {% if container.devices is defined %}
     devices:
 {% for device in container.devices %}
