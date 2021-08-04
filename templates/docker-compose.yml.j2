@@ -82,7 +82,7 @@ services:
 {% endif %}
 {% if container.command is defined %}
     command:
-      {{ command }}
+      {{ container.command }}
 {% endif %}
 {% if container.security_opt is defined %}
     security_opt:
