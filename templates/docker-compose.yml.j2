@@ -16,6 +16,9 @@ services:
 {% if container.network_mode is defined %}
     network_mode: {{ container.network_mode }}
 {% endif %}
+{% if container.build is defined %}
+    build: {{ container.build }}
+{% endif %}
 {% if container.privileged is defined %}
     privileged: {{ container.privileged }}
 {% endif %}
