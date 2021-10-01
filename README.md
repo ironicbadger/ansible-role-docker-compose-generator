@@ -14,6 +14,9 @@ global_env_vars:
 appdata_path: /opt/appdata
 container_config_path: /config
 container_data_path: /data
+run_compose_on_file_change: false
+docker_compose_command: docker-compose up -d
+
 
 # container definitions
 containers:

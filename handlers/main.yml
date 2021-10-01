@@ -1,0 +1,5 @@
+- name: Execute docker-compose command
+  shell:
+    chdir: "{{ docker_compose_generator_output_path }}"
+    cmd: "{{ docker_compose_command }}"
+  when: run_compose_on_file_change
