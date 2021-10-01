@@ -10,3 +10,4 @@
     dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
+  notify: Execute docker-compose command
