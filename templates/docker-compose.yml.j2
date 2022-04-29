@@ -110,6 +110,16 @@ services:
       - {{ dns_entry }}
 {% endfor %}
 {% endif %}
+{% if container.logging.driver is defined %}
+	logging:
+	  driver: {{ container.logging.driver }}
+{% if container.logging.options is defined %}
+	  options:
+{% for option in container.logging.options %}
+		{{ option }}: {{ container.logging.options[option] }}
+{% endfor %}
+{% endif %}
+{% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
 {% endif %}
