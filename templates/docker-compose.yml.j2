@@ -104,6 +104,11 @@ services:
 {% if container.shm_size is defined %}
     shm_size: {{ container.shm_size }}
 {% endif %}
+{% if container.ulimits is defined %}
+    nofile:
+      soft: {{ container.ulimits_soft }}
+      hard: {{ container.ulimits_hard }}
+{% endif %}
 {% if container.dns is defined %}
     dns:
 {% for dns_entry in container.dns %}
