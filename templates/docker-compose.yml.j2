@@ -116,6 +116,12 @@ services:
 {% endfor %}
 {% endif %}
 {% endif %}
+{% if container.tmpfs is defined %}
+    tmpfs:
+{% for item in container.tmpfs %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
 {% if container.dns is defined %}
     dns:
 {% for dns_entry in container.dns %}
