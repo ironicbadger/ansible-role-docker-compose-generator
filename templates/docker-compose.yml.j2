@@ -105,9 +105,16 @@ services:
     shm_size: {{ container.shm_size }}
 {% endif %}
 {% if container.ulimits is defined %}
-    nofile:
-      soft: {{ container.ulimits_soft }}
-      hard: {{ container.ulimits_hard }}
+    ulimits:
+{% if container.ulimits.nproc is defined %}
+      nproc: {{ container.ulimits.nproc }}
+{% endif %}
+{% if container.ulimits.nofile is defined %}
+      nofile:
+{% for param, value in container.ulimits.nofile.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% if container.dns is defined %}
     dns:
