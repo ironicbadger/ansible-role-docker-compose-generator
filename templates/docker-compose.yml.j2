@@ -115,6 +115,12 @@ services:
         {{ param }}: {{ value }}
 {% endfor %}
 {% endif %}
+{% if container.ulimits.memlock is defined %}
+      memlock:
+{% for param, value in container.ulimits.memlock.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% if container.tmpfs is defined %}
     tmpfs:
