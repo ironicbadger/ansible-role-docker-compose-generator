@@ -134,6 +134,12 @@ services:
       - {{ dns_entry }}
 {% endfor %}
 {% endif %}
+{% if container.env_file is defined %}
+    env_file:
+{% for envfile in container.env_file %}
+      - {{ envfile }}
+{% endfor %}
+{% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
 {% endif %}
