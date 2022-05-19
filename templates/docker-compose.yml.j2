@@ -104,6 +104,30 @@ services:
 {% if container.shm_size is defined %}
     shm_size: {{ container.shm_size }}
 {% endif %}
+{% if container.ulimits is defined %}
+    ulimits:
+{% if container.ulimits.nproc is defined %}
+      nproc: {{ container.ulimits.nproc }}
+{% endif %}
+{% if container.ulimits.nofile is defined %}
+      nofile:
+{% for param, value in container.ulimits.nofile.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% if container.ulimits.memlock is defined %}
+      memlock:
+{% for param, value in container.ulimits.memlock.items() %}
+        {{ param }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.tmpfs is defined %}
+    tmpfs:
+{% for item in container.tmpfs %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
 {% if container.dns is defined %}
     dns:
 {% for dns_entry in container.dns %}
@@ -119,6 +143,12 @@ services:
         {{ option }}: {{ container.logging.options[option] }}
 {% endfor %}
 {% endif %}
+{% endif %}
+{% if container.env_file is defined %}
+    env_file:
+{% for envfile in container.env_file %}
+      - {{ envfile }}
+{% endfor %}
 {% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}

@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: docker_compose_generator
   author: Alex Kretzschmar
-  description: Adds users to a Linux system
+  description: Create a docker-compose.yml file
   issue_tracker_url: https://github.com/ironicbadger/ansible-role-create-users/issues
   license: GPLv2
   min_ansible_version: 2.4
