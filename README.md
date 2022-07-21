@@ -15,6 +15,11 @@ appdata_path: /opt/appdata
 container_config_path: /config
 container_data_path: /data
 
+# docker volumes
+docker_volumes:
+  - name: my_vol
+    external: False
+
 # container definitions
 containers:
   - service_name: letsencrypt
@@ -75,4 +80,12 @@ containers:
     mem_limit: 128m
     ports:
       - "4242:4242"
+  - service_name: postgres
+    active: true
+    image: postgres:latest
+    container_name: postgres_db
+    volumes:
+      - my_vol:/var/lib/postresql/data
+    include_global_env_vars: true
+    restart: always
 ```
