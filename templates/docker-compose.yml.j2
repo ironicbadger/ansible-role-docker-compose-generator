@@ -155,3 +155,13 @@ services:
 {% endif %}
 {% endif %}
 {% endfor %}
+
+{% if docker_volumes is defined %}
+volumes:
+{% for volume in docker_volumes %}
+    {{ volume.name }}:
+    {% if volume.external is defined %}
+        external: {% volume.external %}
+    {% endif %}
+{% endfor %}
+{% endif %}
