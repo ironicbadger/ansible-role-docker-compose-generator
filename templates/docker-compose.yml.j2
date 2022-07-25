@@ -153,5 +153,18 @@ services:
 {% if container.restart is defined %}
     restart: {{ container.restart }}
 {% endif %}
+{% if container.networks is defined %}
+    networks:
+{% for network in container.networks %}
+      - {{ network }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
+
+{% if docker_networks is defined %}
+networks:
+{% for network in docker_networks %}
+  {{ network }}:
+{% endfor %}
+{% endif %}
