@@ -15,6 +15,11 @@ appdata_path: /opt/appdata
 container_config_path: /config
 container_data_path: /data
 
+# docker networks
+# (only basic network creation currently supported)
+docker_networks:
+  - mynetwork
+
 # container definitions
 containers:
   - service_name: letsencrypt
@@ -41,6 +46,8 @@ containers:
       - TZ=Europe/London
       - VALIDATION=http
     mem_limit: 256m
+    networks:
+      - mynetwork
   - service_name: nextcloud
     active: true
     image: nextcloud
@@ -65,6 +72,8 @@ containers:
       - "{{ appdata_path }}/unifi:{{ container_config_path }}"
     include_global_env_vars: true
     restart: "{{ unless_stopped }}"
+    networks:
+      - mynetwork
   - service_name: quassel
     active: true
     image: linuxserver/quassel
