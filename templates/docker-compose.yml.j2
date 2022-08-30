@@ -19,6 +19,9 @@ services:
 {% if container.build is defined %}
     build: {{ container.build }}
 {% endif %}
+{% if container.user is defined %}
+	user: {{ container.user }}
+{$ endif %}
 {% if container.privileged is defined %}
     privileged: {{ container.privileged }}
 {% endif %}

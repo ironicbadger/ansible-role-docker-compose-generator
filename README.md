@@ -45,6 +45,7 @@ containers:
     active: true
     image: nextcloud
     container_name: nextcloud
+	user: www-data
     include_global_env_vars: false
     volumes:
       - "{{ appdata_path }}/nextcloud/html:/var/www/html"
