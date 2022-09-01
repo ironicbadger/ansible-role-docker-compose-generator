@@ -84,7 +84,14 @@ services:
     mem_limit: {{ container.mem_limit }}
 {% endif %}
 {% if container.command is defined %}
+{% if container.command is string %}
     command: {{ container.command }}
+{% else %}
+    command:
+{% for command in container.command %}
+      - {{ command }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% if container.security_opt is defined %}
     security_opt:
