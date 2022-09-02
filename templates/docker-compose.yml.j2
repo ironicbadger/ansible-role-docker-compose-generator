@@ -21,7 +21,7 @@ services:
 {% endif %}
 {% if container.user is defined %}
 	user: {{ container.user }}
-{$ endif %}
+{% endif %}
 {% if container.privileged is defined %}
     privileged: {{ container.privileged }}
 {% endif %}
