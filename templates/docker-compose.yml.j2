@@ -170,9 +170,9 @@ services:
 {% endif %}
 {% endif %}
 {% endfor %}
-{% if networks is defined %}
+{% if docker_networks is defined %}
 networks:
-{% for network in networks %}
+{% for network in docker_networks %}
 {% if network.active %}
   {{ network.network_name }}:
 {% if network.external is defined %}
