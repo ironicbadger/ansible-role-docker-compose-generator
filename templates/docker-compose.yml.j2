@@ -154,6 +154,9 @@ services:
       - {{ envfile }}
 {% endfor %}
 {% endif %}
+{% if container.user is defined %}
+    user: {{ container.user }}
+{% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
 {% endif %}
