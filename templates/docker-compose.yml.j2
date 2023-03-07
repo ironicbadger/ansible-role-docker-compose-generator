@@ -23,13 +23,13 @@ services:
     privileged: {{ container.privileged }}
 {% endif %}
 {% if container.cap_add is defined %}
-    cap_add: 
+    cap_add:
 {% for cap in container.cap_add %}
       - {{ cap }}
 {% endfor %}
 {% endif %}
 {% if container.group_add is defined %}
-    group_add: 
+    group_add:
 {% for group in container.group_add %}
       - {{ group }}
 {% endfor %}
