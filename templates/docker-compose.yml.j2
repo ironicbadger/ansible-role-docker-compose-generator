@@ -70,6 +70,12 @@ services:
       - {{ port }}
 {% endfor %}
 {% endif %}
+{% if container.expose is defined %}
+    expose:
+{% for expose_port in container.expose %}
+      - {{ expose_port }}
+{% endfor %}
+{% endif %}
 {% if ( container.environment is defined ) or ( container.include_global_env_vars is defined and container.include_global_env_vars) %}
     environment:
 {% if container.include_global_env_vars | default(false) %}
