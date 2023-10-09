@@ -66,9 +66,15 @@ services:
 {% endfor %}
 {% endif %}
 {% if container.environment is defined %}
-{% for env_var in container.environment %}
-      - {{ env_var }}
+{% if container.environment is mapping %}
+{% for key, value in container.environment.items() %}
+      - {{ key }}: "{{ value }}"
 {% endfor %}
+{% else %}
+{% for item in container.environment %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endif %}
 {% if container.depends_on is defined %}

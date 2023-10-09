@@ -8,7 +8,8 @@ closed, I had to fork it.
 ## How to use it
 
 Pass this role a hash and it will generate a `docker-compose.yml` file. The following structure is supported and is
-designed to be passed to the role using `group_vars`.
+designed to be passed to the role using `group_vars`. `environment` can be populated using a list of strings or a
+hash/key-value pairs.
 
 Rendered files are output to the `output` directory.
 
