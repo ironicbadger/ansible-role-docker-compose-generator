@@ -1,10 +1,18 @@
 # ansible-role-docker-compose-generator
 
-Pass this role a hash and it will generate a docker-compose.yml file. The following structure is supported and is designed to be passed to the role using `group_vars`.
+A fork from [this repository](https://github.com/ironicbadger/ansible-role-docker-compose-generator). I really liked the
+way that role worked, but I had a hard time getting the environment variables right when I wanted to put a password in
+there. And since [this issue](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/2) was
+closed, I had to fork it.
+
+## How to use it
+
+Pass this role a hash and it will generate a `docker-compose.yml` file. The following structure is supported and is
+designed to be passed to the role using `group_vars`.
 
 Rendered files are output to the `output` directory.
 
-```
+```yaml
 ---
 
 # global vars
