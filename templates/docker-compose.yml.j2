@@ -68,7 +68,7 @@ services:
 {% if container.environment is defined %}
 {% if container.environment is mapping %}
 {% for key, value in container.environment.items() %}
-      - {{ key }}: "{{ value }}"
+      {{ key }}: "{{ value }}"
 {% endfor %}
 {% else %}
 {% for item in container.environment %}
