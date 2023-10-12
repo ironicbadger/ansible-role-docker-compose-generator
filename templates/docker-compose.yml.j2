@@ -71,6 +71,12 @@ services:
 {% endfor %}
 {% endif %}
 {% endif %}
+{% if container.healthcheck is defined %}
+    healthcheck:
+{% for key, value in container.healthcheck.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 {% if container.depends_on is defined %}
     depends_on:
 {% for dependent in container.depends_on %}
