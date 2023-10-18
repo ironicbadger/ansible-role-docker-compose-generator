@@ -28,6 +28,7 @@ jobs:
       - name: Trigger a new import on Galaxy.
         run: |
           REPO="$(echo ${{ github.repository }} | cut -d/ -f2)"
+          ROLE_NAME="$(echo "${REPO#ansible-role-}" | tr '-' '_')"
           ansible-galaxy role import --token ${{ secrets.GALAXY_API_KEY }} \
-          --branch master --role-name $(echo "${REPO#ansible-role-}" | tr '-' '_') \
+          --branch master --role-name $ROLE_NAME \
           ${{ env.GALAXY_USERNAME }} $REPO
