@@ -3,6 +3,7 @@
   ansible.builtin.file:
     path: "{{ docker_compose_generator_output_path }}"
     state: directory
+    mode: "0755"
 
 - name: Write docker-compose file
   ansible.builtin.template:
@@ -10,3 +11,4 @@
     dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
+    mode: "0600"

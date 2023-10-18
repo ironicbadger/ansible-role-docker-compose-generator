@@ -14,7 +14,6 @@ galaxy_info:
     - name: GenericUNIX
       versions:
         - all
-        - any
     - name: Fedora
       versions:
         - all
@@ -27,7 +26,6 @@ galaxy_info:
     - name: GenericBSD
       versions:
         - all
-        - any
     - name: FreeBSD
       versions:
         - all
@@ -40,11 +38,9 @@ galaxy_info:
     - name: GenericLinux
       versions:
         - all
-        - any
     - name: Debian
       versions:
         - all
-    galaxy_tags:
-      - system
-      - web
-dependencies: []
+  galaxy_tags:
+    - system
+    - web
