@@ -10,41 +10,41 @@ galaxy_info:
   platforms:
   - name: EL
     versions:
-    - all
+      - all
   - name: GenericUNIX
     versions:
-    - all
-    - any
+      - all
+      - any
   - name: Fedora
     versions:
-    - all
+      - all
   - name: opensuse
     versions:
-    - all
+      - all
   - name: Amazon
     versions:
-    - all
+      - all
   - name: GenericBSD
     versions:
-    - all
-    - any
+      - all
+      - any
   - name: FreeBSD
     versions:
-    - all
+      - all
   - name: Ubuntu
     versions:
-    - all
+      - all
   - name: SLES
     versions:
-    - all
+      - all
   - name: GenericLinux
     versions:
-    - all
-    - any
+      - all
+      - any
   - name: Debian
     versions:
-    - all
+      - all
   galaxy_tags:
-  - system
-  - web
+    - system
+    - web
 dependencies: []
