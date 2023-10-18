@@ -1,0 +1,16 @@
+name: ansible-lint
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Lint Ansible Playbook
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Lint Ansible Playbook
+      uses: ansible/ansible-lint@main
