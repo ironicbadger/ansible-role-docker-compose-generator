@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: docker_compose_generator
+  namespace: micxer
   author: Michael Weinrich
   description: Create a docker-compose.yml file
   issue_tracker_url: https://github.com/micxer/ansible-role-docker-compose-generator/issues
