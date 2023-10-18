@@ -1,12 +1,12 @@
 ---
-- name: ensure destination for compose file exists
-  file:
+- name: Ensure destination for compose file exists
+  ansible.builtin.file:
     path: "{{ docker_compose_generator_output_path }}"
     state: directory
 
-- name: write docker-compose file
-  template:
-    src: ../templates/docker-compose.yml.j2
+- name: Write docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
     dest: "{{ docker_compose_generator_output_path }}/docker-compose.yml"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
