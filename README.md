@@ -75,4 +75,21 @@ containers:
     mem_limit: 128m
     ports:
       - "4242:4242"
+  - service_name: netbox
+    active: true
+	image: docker.io/netboxcommunity/netbox:v3.6-2.7.0
+	anchor: netbox
+	user: "unit:root"
+  - service_name: netbox-worker
+    active: true
+	fragment: netbox
+	command:
+	  - /opt/netbox/venv/bin/python
+	  - /opt/netbox/netbox/manage.py
+	  - rqworker
+  - service_name: netbox-housekeeping
+    active: true
+	fragment: netbox
+	command:
+	  - /opt/netbox/housekeeping.sh
 ```
