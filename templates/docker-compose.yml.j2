@@ -4,8 +4,8 @@ version: "{{ compose_schema_version | default('2') }}"
 services:
 {% for container in containers %}
 {% if container.active %}
-  {{ container.service_name }}:{% if container.anchor is defined %} &{{ container.anchor }}
-{% endif %}
+  {{ container.service_name }}:{% if container.anchor is defined %} &{{ container.anchor }}{% endif %}
+
 {% if container.fragment is defined %}
     <<: *{{ container.fragment }}
 {% else %}
