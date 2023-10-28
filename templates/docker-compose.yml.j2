@@ -6,7 +6,7 @@ services:
 {% if container.active %}
   {{ container.service_name }}:{% if container.anchor is defined %} &{{ container.anchor }}{% endif %}
 {% if container.fragment is defined %}
-	<<: *{{ container.fragment }}
+    <<: *{{ container.fragment }}
 {% else %}
     image: {{ container.image }}
 {% endif %}
