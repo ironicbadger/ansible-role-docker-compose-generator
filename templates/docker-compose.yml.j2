@@ -4,8 +4,12 @@ version: "{{ compose_schema_version | default('2') }}"
 services:
 {% for container in containers %}
 {% if container.active %}
-  {{ container.service_name }}:
+  {{ container.service_name }}:{% if container.anchor is defined %} &{{ container.anchor }}{% endif %}
+{% if container.fragment is defined %}
+	<<: *{{ container.fragment }}
+{% else %}
     image: {{ container.image }}
+{% endif %}
     container_name: {{ container.container_name | default(container.service_name) }}
 {% if container.extra_hosts is defined %}
     extra_hosts:
