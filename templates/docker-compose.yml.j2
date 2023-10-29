@@ -161,9 +161,13 @@ services:
 {% endif %}
 {% if container.healthcheck is defined %}
     healthcheck:
-      test: {{ container.healthcheck.test }}
+      test: "{{ container.healthcheck.test }}"
+{% if container.healthcheck.interval is defined %}
       interval: {{ container.healthcheck.interval }}
+{% endif %}
+{% if container.healthcheck.timeout is defined %}
       timeout: {{ container.healthcheck.timeout }}
+{% endif %}
 {% if container.healthcheck.retries is defined %}
       retries: {{ container.healthcheck.retries }}
 {% endif %}
