@@ -63,6 +63,9 @@ containers:
     mem_limit: 512m
     volumes:
       - "{{ appdata_path }}/unifi:{{ container_config_path }}"
+    depends_on:
+      - service: mongodb
+        condition: service_started
     include_global_env_vars: true
     restart: "{{ unless_stopped }}"
   - service_name: quassel
