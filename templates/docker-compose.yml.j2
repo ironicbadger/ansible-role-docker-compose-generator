@@ -1,7 +1,4 @@
 {{ ansible_managed | comment }}
-##############################
-# If you're seeing this, you're using a symlinked version of this role.
-##############################
 ---
 version: "{{ compose_schema_version | default('3') }}"
 services:
@@ -102,7 +99,7 @@ services:
     depends_on:
 {% for dependent in container.depends_on %}
 {% if dependent is mapping %}
-      {{ dependent }}:
+      {{ dependent.service}}:
         condition: {{ dependent.condition }}
 {% else %}
       - {{ dependent }}
