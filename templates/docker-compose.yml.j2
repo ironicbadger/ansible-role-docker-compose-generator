@@ -54,9 +54,15 @@ services:
 {% endif %}
 {% if container.labels is defined %}
     labels:
+{% if container.labels is mapping %}
+{% for key, value in container.labels.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+{% else %}
 {% for label in container.labels %}
       - {{ label }}
 {% endfor %}
+{% endif %}
 {% endif %}
 {% if container.ports is defined %}
     ports:
