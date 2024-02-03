@@ -46,6 +46,12 @@ services:
       - {{ volume }}
 {% endfor %}
 {% endif %}
+{% if container.networks is defined %}
+    networks:
+{% for volume in container.networks %}
+      - {{ volume }}
+{% endfor %}
+{% endif %}
 {% if container.labels is defined %}
     labels:
 {% for label in container.labels %}
