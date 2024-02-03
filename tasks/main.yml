@@ -12,3 +12,8 @@
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
     mode: "0600"
+
+- name: Create proxy network
+  community.docker.docker_network:
+    name: "{{ docker_compose_generator_proxy_network }}"
+    state: present
