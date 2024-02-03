@@ -1,6 +1,6 @@
 {{ ansible_managed | comment }}
 ---
-version: "{{ compose_schema_version | default('2') }}"
+version: "{{ compose_schema_version | default('3') }}"
 services:
 {% for container in containers %}
 {% if container.active %}
