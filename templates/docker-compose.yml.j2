@@ -168,3 +168,8 @@ services:
 {% endif %}
 {% endif %}
 {% endfor %}
+
+networks:
+  {{ docker_compose_generator_proxy_network }}:
+    driver: bridge
+    external: true
