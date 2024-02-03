@@ -1,2 +1,2 @@
-collections:
-  - community.docker
+dependencies:
+  - name: community.docker
