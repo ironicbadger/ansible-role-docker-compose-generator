@@ -13,7 +13,12 @@
     group: "{{ docker_compose_generator_gid }}"
     mode: "0600"
 
-- name: Create proxy network
+- name: Get used networks in containers
+  set_fact:
+    used_networks: "{{ containers | community.general.json_query('[].networks') | flatten | unique }}"
+
+- name: Create networks for containers
   community.docker.docker_network:
-    name: "{{ docker_compose_generator_proxy_network }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ used_networks }}"
