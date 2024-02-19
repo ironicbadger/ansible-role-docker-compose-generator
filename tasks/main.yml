@@ -14,8 +14,8 @@
     mode: "0600"
 
 - name: Get used networks in containers
-  set_fact:
-    used_networks: "{{ containers | community.general.json_query('[].networks') | flatten | unique }}"
+  ansible.builtin.set_fact:
+    used_networks: "{{ containers | community.general.json_query('[].networks') | ansible.builtin.flatten | ansible.builtin.unique }}"
 
 - name: Create networks for containers
   community.docker.docker_network:
