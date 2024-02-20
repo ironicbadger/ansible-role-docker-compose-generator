@@ -181,7 +181,9 @@ services:
 {% endif %}
 {% endfor %}
 
+{% if used_networks %}
 networks:
-  {{ docker_compose_generator_proxy_network }}:
-    driver: bridge
-    external: true
+{% for network in used_networks %}
+  {{ network }}:
+{% endfor %}
+{% endif %}
