@@ -80,7 +80,12 @@ services:
 {% if container.depends_on is defined %}
     depends_on:
 {% for dependent in container.depends_on %}
+{% if dependent is mapping %}
+      {{ dependent.service}}:
+        condition: {{ dependent.condition }}
+{% else %}
       - {{ dependent }}
+{% endif %}
 {% endfor %}
 {% endif %}
 {% if container.hostname is defined %}
@@ -160,8 +165,19 @@ services:
       - {{ envfile }}
 {% endfor %}
 {% endif %}
-{% if container.user is defined %}
-    user: {{ container.user }}
+{% if container.healthcheck is defined %}
+    healthcheck:
+      test: "{{ container.healthcheck.test }}"
+{% if container.healthcheck.interval is defined %}
+      interval: {{ container.healthcheck.interval }}
+{% endif %}
+{% if container.healthcheck.timeout is defined %}
+      timeout: {{ container.healthcheck.timeout }}
+{% endif %}
+{% if container.healthcheck.retries is defined %}
+      retries: {{ container.healthcheck.retries }}
+{% endif %}
+      start_period: {{ container.healthcheck.start_period }}
 {% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
