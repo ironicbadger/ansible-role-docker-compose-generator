@@ -202,9 +202,9 @@ services:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              count: {{ container.deploy.resources.reservations.devices.driver.count | default("1") }}
-              capabilities: [gpu]
+          - driver: nvidia
+            count: {{ container.deploy.resources.reservations.devices.driver.count | default("1") }}
+            capabilities: [gpu]
 {% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
