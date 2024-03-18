@@ -16,6 +16,24 @@ services:
 {% if container.network_mode is defined %}
     network_mode: {{ container.network_mode }}
 {% endif %}
+{% if container.networks is defined %}
+    networks:
+{% if container.networks is iterable and (container.networks is not string and container.networks is not mapping) %}
+{% for network in container.networks %}
+      - {{ network }}
+{% endfor %}
+{% else %}
+{% for network, params in container.networks.items() %}
+      {{ network }}:
+{% if params.aliases is defined %}
+        aliases:
+{% for alias in params.aliases %}
+          - {{ alias }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
 {% if container.build is defined %}
     build: {{ container.build }}
 {% endif %}
@@ -196,3 +214,17 @@ services:
 {% endif %}
 {% endif %}
 {% endfor %}
+{% if docker_networks is defined %}
+networks:
+{% for network in docker_networks %}
+{% if network.active %}
+  {{ network.network_name }}:
+{% if network.external is defined %}
+    external: {{ network.external }}
+{% endif %}
+{% if network.driver is defined %}
+    driver: {{ network.driver }}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
