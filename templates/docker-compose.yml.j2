@@ -180,6 +180,7 @@ services:
 {% if container.healthcheck.start_period is defined %}
       start_period: {{ container.healthcheck.start_period }}
 {% endif %}
+{% endif %}
 {% if container.deploy.resources.reservations.devices is defined %}
     deploy:
       resources:
