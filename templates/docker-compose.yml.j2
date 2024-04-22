@@ -177,6 +177,7 @@ services:
 {% if container.healthcheck.retries is defined %}
       retries: {{ container.healthcheck.retries }}
 {% endif %}
+{% if container.healthcheck.start_period is defined %}
       start_period: {{ container.healthcheck.start_period }}
 {% endif %}
 {% if container.deploy.resources.reservations.devices is defined %}
