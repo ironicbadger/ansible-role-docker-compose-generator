@@ -181,7 +181,7 @@ services:
 {% endif %}
 {% endfor %}
 
-{% if used_networks %}
+{% if used_networks is defined %}
 networks:
 {% for network in used_networks %}
   {{ network }}:

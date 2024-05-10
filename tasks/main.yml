@@ -22,3 +22,4 @@
     name: "{{ item }}"
     state: present
   loop: "{{ used_networks }}"
+  when: used_networks is defined
