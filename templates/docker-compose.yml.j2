@@ -183,6 +183,9 @@ services:
       - {{ envfile }}
 {% endfor %}
 {% endif %}
+{% if container.user is defined %}
+    user: {{ container.user }}
+{% endif %}
 {% if container.healthcheck is defined %}
     healthcheck:
       test: "{{ container.healthcheck.test }}"
