@@ -167,7 +167,7 @@ services:
 {% endif %}
 {% if container.healthcheck is defined %}
     healthcheck:
-      test: "{{ container.healthcheck.test }}"
+      test: {{ container.healthcheck.test }}
 {% if container.healthcheck.interval is defined %}
       interval: {{ container.healthcheck.interval }}
 {% endif %}
@@ -177,7 +177,9 @@ services:
 {% if container.healthcheck.retries is defined %}
       retries: {{ container.healthcheck.retries }}
 {% endif %}
+{% if container.healthcheck.start_period is defined %}
       start_period: {{ container.healthcheck.start_period }}
+{% endif %}
 {% endif %}
 {% if container.deploy.resources.reservations.devices is defined %}
     deploy:
