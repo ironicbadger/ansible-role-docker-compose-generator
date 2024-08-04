@@ -15,6 +15,38 @@ services:
 {% if container.network_mode is defined %}
     network_mode: {{ container.network_mode }}
 {% endif %}
+{% if container.networks is defined %}
+    networks:
+{% for network_name, network_value in container.networks.items() %}
+{% if network_value is not mapping %}
+      - {{ network_name }}
+{% else %}
+      {{ network_name }}:
+{% if network_value.aliases is defined %}
+        aliases:
+{% for alias in network_value.aliases %}
+          - {{ alias }}
+{% endfor %}
+{% endif %}
+{% if network_value.ipv4_address is defined %}
+        ipv4_address: {{ network_value.ipv4_address }}
+{% endif %}
+{% if network_value.ipv6_address is defined %}
+        ipv6_address: {{ network_value.ipv6_address }}
+{% endif %}
+{% if network_value.link_local_ips is defined %}
+        link_local_ips:
+{% for ip in network_value.link_local_ips %}
+          - {{ ip }}
+{% endfor %}
+{% endif %}
+{% if network_value.mac_address is defined %}
+        mac_address: {{ network_value.mac_address }}
+{% endif %}
+        priority: {{ network_value.priority | default(0) }}
+{% endif %}
+{% endfor %}
+{% endif %}
 {% if container.build is defined %}
     build: {{ container.build }}
 {% endif %}
@@ -197,3 +229,34 @@ services:
 {% endif %}
 {% endif %}
 {% endfor %}
+{% if networks is defined %}
+networks:
+{% for network in networks %}
+    {{ network.network_name }}:
+      driver: {{ network.driver | default("bridge") }}
+{% if network.driver_opts is defined %}
+      driver_opts:
+{% for opt in network.driver_opts %}
+        {{ opt }}
+{% endfor %}
+{% endif %}
+{% if network.ipam is defined %}
+      ipam:
+        driver: {{ network.ipam.driver | default("default") }}
+{% if network.ipam.config is defined %}
+        config:
+{% for config in network.ipam.config %}
+{% for key, value in config.items() %}
+            - {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if network.ipam.options is defined %}
+        options:
+{% for key, value in network.ipam.options.items() %}
+          {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
