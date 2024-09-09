@@ -192,8 +192,6 @@ services:
 {% for device_id in device.device_ids %}
                 - {{ device_id }}
 {% endfor %}
-{% endif %}
-{% endfor %}
 {% else %}
     deploy:
         resources:
@@ -201,6 +199,8 @@ services:
             devices:
             - count: {{ container.deploy.resources.reservations.devices[0].driver.count | default("1") }}
                 capabilities: [gpu]
+{% endif %}
+{% endfor %}
 {% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
