@@ -185,9 +185,22 @@ services:
       resources:
         reservations:
           devices:
-          - driver: nvidia
-            count: {{ container.deploy.resources.reservations.devices.driver.count | default("1") }}
-            capabilities: [gpu]
+{% for device in container.deploy.resources.reservations.devices %}
+            - driver: {{ device.driver }}
+{% if device.device_ids is defined %}
+              device_ids:
+{% for device_id in device.device_ids %}
+                - {{ device_id }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% else %}
+    deploy:
+        resources:
+        reservations:
+            devices:
+            - count: {{ container.deploy.resources.reservations.devices[0].driver.count | default("1") }}
+                capabilities: [gpu]
 {% endif %}
 {% if container.restart is defined %}
     restart: {{ container.restart }}
