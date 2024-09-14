@@ -103,6 +103,22 @@ services:
 {% endfor %}
 {% endif %}
 {% endif %}
+{% if container.stdin_open is defined %}
+    stdin_open: {{ container.stdin_open }}
+{% endif %}
+{% if container.tty is defined %}
+    tty: {{ container.tty }}
+{% endif %}
+{% if container.entrypoint is defined %}
+{% if container.entrypoint is string %}
+    entrypoint: {{ container.entrypoint }}
+{% else %}
+    entrypoint:
+{% for entrypoint in container.entrypoint %}
+      - {{ entrypoint }}
+{% endfor %}
+{% endif %}
+{% endif %}
 {% if container.security_opt is defined %}
     security_opt:
 {% for sec_opt in container.security_opt %}
