@@ -78,4 +78,33 @@ containers:
     mem_limit: 128m
     ports:
       - "4242:4242"
+  - service_name: service-on-custom-network
+    active: true
+    image: ubuntu:24.04
+    container_name: example
+    include_global_env_vars: true
+    networks:
+      my-network:
+      my-network-2:
+  - service_name: service-on-custom-network-wit-hardcoded-ip
+    active: true
+    image: ubuntu:24.04
+    container_name: example-hardcoded
+    include_global_env_vars: true
+    networks:
+      my-network:
+        ipv4_address: 172.16.0.1
+
+# optionally include networks to be created (these can be referenced using the networks key in the container definition above)
+networks:
+  - network_name: my-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+  - network_name: my-network-2
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
 ```
