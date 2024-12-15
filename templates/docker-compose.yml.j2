@@ -192,7 +192,7 @@ services:
 {% endif %}
               capabilities:
 {% for capabilities in device.capabilities %}
-                - {{ capabilities }}
+                - {{ capabilities | default("gpu") }}
 {% endfor %}
 {% if device.device_ids is defined %}
               device_ids: ['{{ device.device_id | default("0") }}']
