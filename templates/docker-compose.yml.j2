@@ -27,6 +27,12 @@ services:
       - {{ cap }}
 {% endfor %}
 {% endif %}
+{% if container.cap_drop is defined %}
+    cap_drop:
+{% for cap in container.cap_drop %}
+      - {{ cap }}
+{% endfor %}
+{% endif %}
 {% if container.group_add is defined %}
     group_add:
 {% for group in container.group_add %}
@@ -100,6 +106,25 @@ services:
     command:
 {% for command in container.command %}
       - {{ command }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if container.stdin_open is defined %}
+    stdin_open: {{ container.stdin_open }}
+{% endif %}
+{% if container.tty is defined %}
+    tty: {{ container.tty }}
+{% endif %}
+{% if container.read_only is defined %}
+    read_only: {{ container.read_only }}
+{% endif %}
+{% if container.entrypoint is defined %}
+{% if container.entrypoint is string %}
+    entrypoint: {{ container.entrypoint }}
+{% else %}
+    entrypoint:
+{% for entrypoint in container.entrypoint %}
+      - {{ entrypoint }}
 {% endfor %}
 {% endif %}
 {% endif %}
