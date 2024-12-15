@@ -187,22 +187,15 @@ services:
           devices:
 {% for device in container.deploy.resources.reservations.devices %}
             - driver: {{ device.driver }}
+{% if device.count is defined %}
+              count: {{ device.count | default("1") }}
+{% endif %}
               capabilities:
-{% for item in device.capabilities %}
-                - {{ item }}
+{% for capabilities in device.capabilities %}
+                - {{ capabilities }}
 {% endfor %}
 {% if device.device_ids is defined %}
-              device_ids:
-{% for device_id in device.device_ids %}
-                - {{ device_id }}
-{% endfor %}
-{% else %}
-    deploy:
-        resources:
-        reservations:
-            devices:
-            - count: {{ container.deploy.resources.reservations.devices[0].driver.count | default("1") }}
-                capabilities: [gpu]
+              device_ids: ['{{ device.device_id | default("0") }}']
 {% endif %}
 {% endfor %}
 {% endif %}
