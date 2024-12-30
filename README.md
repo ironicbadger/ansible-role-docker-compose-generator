@@ -4,7 +4,7 @@ This role will allow you to manage your docker-compose.yml file via Ansible (and
 
 ## Role Variables
 
-#### Defaults:
+### Defaults:
 ```
 docker_compose_generator_output_path: "~"
 docker_compose_generator_uid: "1000"
@@ -13,7 +13,7 @@ docker_compose_generator_config: |
   ChangeMe
 ```
 
-#### Global variables:
+### Global variables:
 
 For some things, like setting UID/GID, or timezone, it's helpful to set them once and have them carry over to all containers.  Just as an example:
 
@@ -26,9 +26,12 @@ global_env_vars:
   - "TZ={{ ntp_timezone }}"
 ```
 
-#### Docker-Compose File
+### Docker-Compose File
 
-There are 2 ways to pass through your docker-compose file.  First is to define it in a template file, which can be done like this:
+There are 2 ways to pass through your docker-compose file.  
+
+#### Option 1
+First is to define it in a template file, which can be done like this:
 
 ```
 docker_compose_generator_config: "{{ lookup('template', 'roles/templates/docker-compose.yml.j2') }}"
@@ -40,6 +43,7 @@ docker_compose_generator_config: "{{ lookup('template', 'roles/{{hostname}}templ
 ```
 And put a docker-compose.yml.j2 file in ever host's template folder.
 
+#### Option 2
 The second option is to include a multiline string in your (somewhat similar to how this role use to work, but you would fully define the compose file).  Like this:
 
 ```
@@ -61,5 +65,4 @@ docker_compose_generator_config: |
         - 444:443/tcp
         - 3000:3000/tcp
       restart: unless-stopped
-
 ```
