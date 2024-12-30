@@ -36,12 +36,10 @@ First is to define it in a template file, which can be done like this:
 ```
 docker_compose_generator_config: "{{ lookup('template', 'roles/templates/docker-compose.yml.j2') }}"
 ```
-
-If you have multiple hosts, you can even do something like this:
+You would have a fully defined Docker-compose.yml file in the main templates folder in your ansible repo.  You can change the path to point to individual files if you want.  Something like this could work if you define the `hostname` variable:
 ```
 docker_compose_generator_config: "{{ lookup('template', 'roles/{{hostname}}templates/docker-compose.yml.j2') }}"
 ```
-And put a docker-compose.yml.j2 file in ever host's template folder.
 
 #### Option 2
 The second option is to include a multiline string in your (somewhat similar to how this role use to work, but you would fully define the compose file).  Like this:
