@@ -42,7 +42,7 @@ Notice that variable interpolation is supported. The source of these variables c
 
 Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
 
-By default, if a `compose.yaml` file is found it will be concatenated onto the remote host and placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
+By default, if a `compose.yaml` file is found it will be included in the automation, and placed into the output `compose.yaml` on the remote host. This file is placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
 
 ```
 disabled_compose_files:
