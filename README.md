@@ -40,6 +40,8 @@ services:
 
 Notice that variable interpolation is supported. The source of these variables can be either an encryped secrets file via Ansible vault (read more about that [here](https://blog.ktz.me/secret-management-with-docker-compose-and-ansible/) - or see [ironicbadger/infra](https://github.com/ironicbadger/infra) for an implemented example).
 
+Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
+
 By default, if a `compose.yaml` file is found it will be concatenated onto the remote host and placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
 
 ```
