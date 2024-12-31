@@ -65,4 +65,4 @@ v2 supports using standalone, native compose files. This makes it much more stra
 
 If you find any edge cases I've missed for v2, please open an issue or PR. I'd be happy to review.
 
-Special thanks goes to fuzzymistborn for the spark for the idea to make this change. As ever, you can find a full working example of my usage of this role over at [ironicbadger/infra](https://github.com/ironicbadger/infra).
+Special thanks goes to [u/fuzzymistborn](https://github.com/fuzzymistborn) for the spark for the idea to make this change. As ever, you can find a full working example of my usage of this role over at [ironicbadger/infra](https://github.com/ironicbadger/infra).
