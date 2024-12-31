@@ -16,15 +16,15 @@
 
 - name: Build combined compose content
   set_fact:
-    combined_compose: >-
-      ---
+    combined_compose: |
       services:
       {% for file in compose_files %}
       {{
         lookup('template', file.src) |
-        regex_replace('(^---\\s*\\n)?services:\\s*\\n', '')
+        regex_replace('^---\s*\n*services:\s*\n', '') |
+        regex_replace('^\s*services:\s*\n', '') |
+        regex_replace('^(\S)', '  \1')
       }}
-
       {% endfor %}
 
 - name: Write combined compose file
