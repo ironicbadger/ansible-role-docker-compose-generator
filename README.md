@@ -1,81 +1,68 @@
 # ansible-role-docker-compose-generator
 
-Pass this role a hash and it will generate a docker-compose.yml file. The following structure is supported and is designed to be passed to the role using `group_vars`.
+This role is designed to ingest directories of `compose.yaml` files and output a sanitised version to a remote host using Ansible.
 
-Rendered files are output to the `output` directory.
+> ⚠️ **Warning:** v1 of this role used a completely different data structure. See [v1 vs v2 of this role](#v1-of-this-role-vs-v2)
+
+## Usage
+
+Import this role into your Ansible setup either as a [git submodule](https://blog.ktz.me/git-submodules-for-fun-and-profit-with-ansible/) or via Ansible Galaxy.
+
+In the root of your git repo create a `services` directory and populate it as follows:
 
 ```
----
+.
+└── services
+    ├── ansible-hostname1
+    │   ├── librespeed
+    │   │   └── compose.yaml
+    │   ├── jellyfin
+    │   │   └── compose.yaml
+    └── ansible-hostname2
+        └── uptime-kuma
+            └── compose.yaml
+```
 
-# global vars
-global_env_vars:
-  - "PUID=1313"
-  - "PGID=1313"
-appdata_path: /opt/appdata
-container_config_path: /config
-container_data_path: /data
+Each `compose.yaml` file is a standard format file, for example librespeed looks like this:
 
-# container definitions
-containers:
-  - service_name: letsencrypt
-    active: true
-    image: linuxserver/letsencrypt
-    container_name: le
+```
+services:
+  librespeed:
+    image: lscr.io/linuxserver/librespeed
+    container_name: librespeed
     ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - "{{ appdata_path }}/letsencrypt/config:{{ container_config_path }}"
-    restart: always
-    depends_on:
-      - unifi
-      - nextcloud
-      - quassel
-    include_global_env_vars: true
+      - 8008:80
     environment:
-      - EMAIL=email@email.com
-      - URL=some.tld
-      - SUBDOMAINS=nc, irc, unifi
-      - ONLY_SUBDOMAINS=true
-      - DHLEVEL=4096
-      - TZ=Europe/London
-      - VALIDATION=http
-    mem_limit: 256m
-  - service_name: nextcloud
-    active: true
-    image: nextcloud
-    container_name: nextcloud
-    include_global_env_vars: false
-    volumes:
-      - "{{ appdata_path }}/nextcloud/html:/var/www/html"
-      - "{{ appdata_path }}/nextcloud/apps:/var/www/html/custom_apps"
-      - "{{ appdata_path }}/nextcloud/config:/var/www/html/config"
-      - "{{ appdata_path }}/nextcloud/data:/var/www/html/data"
-      - "{{ appdata_path }}/nextcloud/theme:/var/www/html/themes"
-    mem_limit: 256m
-    restart: "{{ unless_stopped }}"
-    ports:
-      - "8081:80"
-  - service_name: unifi
-    active: true
-    image: linuxserver/unifi
-    container_name: unifi
-    mem_limit: 512m
-    volumes:
-      - "{{ appdata_path }}/unifi:{{ container_config_path }}"
-    depends_on:
-      - service: mongodb
-        condition: service_started
-    include_global_env_vars: true
-    restart: "{{ unless_stopped }}"
-  - service_name: quassel
-    active: true
-    image: linuxserver/quassel
-    container_name: quassel
-    include_global_env_vars: true
-    volumes:
-      - "{{ appdata_path }}/quassel:{{ container_config_path }}"
-    mem_limit: 128m
-    ports:
-      - "4242:4242"
+      - "TZ={{ host_timezone }}"
+      - "PASSWORD={{ testpass }}"
+    restart: unless-stopped
 ```
+
+Notice that variable interpolation is supported. The source of these variables can be either an encryped secrets file via Ansible vault (read more about that [here](https://blog.ktz.me/secret-management-with-docker-compose-and-ansible/) - or see [ironicbadger/infra](https://github.com/ironicbadger/infra) for an implemented example), an `env` file you manually place alongside the `compose.yaml` on the remote host (see [docker compose variable interpolation](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/#interpolation-syntax)), or any other standard Ansible variable source.
+
+Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
+
+By default, if a `compose.yaml` file is found it will be included in the automation, and placed into the output `compose.yaml` on the remote host. This file is placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
+
+```
+disabled_compose_files:
+  - jellyfin
+```
+
+## Custom hostnames
+
+By default, the role is looking for a directory structure under `services/` which matches your Ansible hostname. If your hostname doesn't match the name of this directory for some reason (maybe it's an IP address, rather than a hostname), you can override the name with the variable:
+
+```
+docker_compose_hostname: my-custom-hostname
+```
+
+## v1 of this role vs v2
+
+v1 of this role used a large custom data structure and an ever more complex jinja2 based templating approach. The custom nature of this approach added friction when adding new services and made it difficult to copy/paste from upstream repositories to try things out quickly.
+
+v2 supports using standalone, native compose files. This makes it much more straightforward to try out new software without needing to 'convert' it to work with the v1 custom data structures.
+
+If you find any edge cases I've missed for v2, please open an issue or PR. I'd be happy to review.
+
+Special thanks goes to [u/fuzzymistborn](https://github.com/fuzzymistborn) for the spark for the idea to make this change. As ever, you can find a full working example of my usage of this role over at [ironicbadger/infra](https://github.com/ironicbadger/infra).
