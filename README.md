@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
 ```
 
-Notice that variable interpolation is supported. The source of these variables can be either an encryped secrets file via Ansible vault (read more about that [here](https://blog.ktz.me/secret-management-with-docker-compose-and-ansible/) - or see [ironicbadger/infra](https://github.com/ironicbadger/infra) for an implemented example).
+Notice that variable interpolation is supported. The source of these variables can be either an encryped secrets file via Ansible vault (read more about that [here](https://blog.ktz.me/secret-management-with-docker-compose-and-ansible/) - or see [ironicbadger/infra](https://github.com/ironicbadger/infra) for an implemented example), an `env` file you manually place alongside the `compose.yaml` on the remote host (see [docker compose variable interpolation](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/#interpolation-syntax)), or any other standard Ansible variable source.
 
 Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
 
