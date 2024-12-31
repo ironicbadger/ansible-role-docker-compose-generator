@@ -49,6 +49,14 @@ disabled_compose_files:
   - jellyfin
 ```
 
+## Custom hostnames
+
+By default, the role is looking for a directory structure under `services/` which matches your Ansible hostname. If your hostname doesn't match the name of this directory for some reason (maybe it's an IP address, rather than a hostname), you can override the name with the variable:
+
+```
+docker_compose_hostname: my-custom-hostname
+```
+
 ## v1 of this role vs v2
 
 v1 of this role used a large custom data structure and an ever more complex jinja2 based templating approach. The custom nature of this approach added friction when adding new services and made it difficult to copy/paste from upstream repositories to try things out quickly.
