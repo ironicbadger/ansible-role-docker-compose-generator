@@ -4,6 +4,8 @@ This role is designed to ingest directories of `compose.yaml` files and output a
 
 > ⚠️ **Warning:** v1 of this role used a completely different data structure. See [v1 vs v2 of this role](#v1-of-this-role-vs-v2)
 
+I wrote the following [blog post](https://blog.ktz.me/docker-compose-generator-v2-release/) on the v2 release for more info.
+
 ## Usage
 
 Import this role into your Ansible setup either as a [git submodule](https://blog.ktz.me/git-submodules-for-fun-and-profit-with-ansible/) or via Ansible Galaxy.
