@@ -11,7 +11,7 @@
         query('filetree', playbook_dir + '/services/' +
           (docker_compose_hostname | default(inventory_hostname))) |
         selectattr('state', 'eq', 'file') |
-        selectattr('path', 'regex', 'compose.ya?ml$') |
+        selectattr('path', 'regex', '.ya?ml$') |
         list
       }}
 
