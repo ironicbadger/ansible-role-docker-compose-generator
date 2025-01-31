@@ -34,6 +34,6 @@
 - name: Write combined compose file
   copy:
     content: "{{ combined_compose }}"
-    dest: "{{ docker_compose_generator_output_path }}/compose.yaml"
+    dest: "{{ docker_compose_generator_output_path }}/{{ docker_compose_generator_output_filename }}"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
