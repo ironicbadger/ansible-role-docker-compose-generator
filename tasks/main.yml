@@ -8,7 +8,7 @@
   set_fact:
     compose_files: >-
       {{
-        query('filetree', playbook_dir + '/services/' +
+        query('filetree', services_directory +
           (docker_compose_hostname | default(inventory_hostname))) |
         selectattr('state', 'eq', 'file') |
         selectattr('path', 'regex', '.ya?ml$') |

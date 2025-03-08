@@ -59,6 +59,11 @@ By default, the role is looking for a directory structure under `services/` whic
 docker_compose_hostname: my-custom-hostname
 ```
 
+## Override services directory location
+
+By default, the role is looking for services by determining where the `playbook_dir` is and appending `services/`. 
+If your playbooks are for example inside a dedicated playbooks directory you can overwrite the services location by setting `services_directory` either in a task var, group_vars or host_vars.
+
 ## v1 of this role vs v2
 
 v1 of this role used a large custom data structure and an ever more complex jinja2 based templating approach. The custom nature of this approach added friction when adding new services and made it difficult to copy/paste from upstream repositories to try things out quickly.
