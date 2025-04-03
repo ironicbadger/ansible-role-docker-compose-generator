@@ -1,3 +1,4 @@
 docker_compose_generator_output_path: "~"
+docker_compose_generator_compose_filename: "compose.yaml"
 docker_compose_generator_uid: "1000"
 docker_compose_generator_gid: "1000"
