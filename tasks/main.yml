@@ -26,8 +26,9 @@
       {% set service_name = file.src | dirname | basename %}
       {% if service_name not in (disabled_compose_files | default([])) %}
       {{ lookup('template', file.src)
-         | regex_replace('^(---|services:)\s*\n*', '')
-         | regex_replace('^', '  ') }}
+         | regex_replace('^(---)\s*\n*', '')
+         | regex_replace('^(services:)\s*\n*', '')
+         | regex_replace('(?m)^', '  ') }}
       {% endif %}
       {% endfor %}
 
