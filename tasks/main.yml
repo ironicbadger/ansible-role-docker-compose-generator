@@ -16,6 +16,20 @@
         list
       }}
 
+- name: Extract services from compose files
+  ansible.builtin.set_fact:
+    extracted_services: >-
+      {{
+        extracted_services | default({}) |
+        combine(
+          (lookup('template', item.src) | from_yaml).services | default({})
+        )
+      }}
+  loop: "{{ compose_files | sort(attribute='src') }}"
+  vars:
+    service_name: "{{ item.src | dirname | basename }}"
+  when: service_name not in (disabled_compose_files | default([]))
+
 - name: Build combined compose content
   ansible.builtin.set_fact:
     combined_compose: |
@@ -23,19 +37,37 @@
       # badger badger badger mushroom mushrooooom...
 
       services:
-      {% for file in compose_files | sort(attribute='src') %}
-      {% set service_name = file.src | dirname | basename %}
-      {% if service_name not in (disabled_compose_files | default([])) %}
-      {{ lookup('template', file.src)
-         | regex_replace('^(---|services:)\s*\n*', '')
-         | regex_replace('^', '  ') }}
+      {% for service_name, service_config in extracted_services.items() %}
+        {{ service_name }}:
+      {% for key, value in service_config.items() %}
+      {% if value is string %}
+          {{ key }}: {{ value | to_json }}
+      {% elif value is number %}
+          {{ key }}: {{ value }}
+      {% elif value is sequence and value is not string %}
+          {{ key }}:
+      {% for item in value %}
+            - {{ item | to_json }}
+      {% endfor %}
+      {% elif value is mapping %}
+          {{ key }}:
+      {% for subkey, subvalue in value.items() %}
+            {{ subkey }}: {{ subvalue | to_json }}
+      {% endfor %}
+      {% else %}
+          {{ key }}: {{ value | to_json }}
       {% endif %}
       {% endfor %}
+      {% endfor %}
 
-- name: Write combined compose file
-  ansible.builtin.copy:
-    content: "{{ combined_compose }}"
-    dest: "{{ docker_compose_generator_output_path }}/compose.yaml"
-    owner: "{{ docker_compose_generator_uid }}"
-    group: "{{ docker_compose_generator_gid }}"
-    mode: "0644"
+# - name: Write combined compose file
+#   ansible.builtin.copy:
+#     content: "{{ combined_compose }}"
+#     dest: "{{ docker_compose_generator_output_path }}/compose.yaml"
+#     owner: "{{ docker_compose_generator_uid }}"
+#     group: "{{ docker_compose_generator_gid }}"
+#     mode: "0644"
+
+- name: Print combined compose content
+  ansible.builtin.debug:
+    msg: "{{ combined_compose }}"
