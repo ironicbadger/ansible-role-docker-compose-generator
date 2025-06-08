@@ -23,7 +23,7 @@
       {{
         compose_files | rejectattr('path', 'contains', disabled_item) | list
       }}
-  loop: "{{ disabled_compose_files }}"
+  loop: "{{ disabled_compose_files if disabled_compose_files is not none else [] }}"
   loop_control:
     loop_var: disabled_item
 
