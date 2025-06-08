@@ -13,8 +13,19 @@
           (docker_compose_hostname | default(inventory_hostname))) |
         selectattr('state', 'eq', 'file') |
         selectattr('path', 'regex', '.ya?ml$') |
+        sort(attribute='src') |
         list
       }}
+
+- name: Filter out disabled compose files
+  ansible.builtin.set_fact:
+    compose_files: >-
+      {{
+        compose_files | rejectattr('path', 'contains', disabled_item) | list
+      }}
+  loop: "{{ disabled_compose_files }}"
+  loop_control:
+    loop_var: disabled_item
 
 - name: Extract services from compose files
   ansible.builtin.set_fact:
@@ -25,10 +36,7 @@
           (lookup('template', item.src) | from_yaml).services | default({})
         )
       }}
-  loop: "{{ compose_files | sort(attribute='src') }}"
-  vars:
-    service_name: "{{ item.src | dirname | basename }}"
-  when: service_name not in (disabled_compose_files | default([]))
+  loop: "{{ compose_files }}"
 
 - name: Extract volumes from compose files
   ansible.builtin.set_fact:
@@ -39,10 +47,7 @@
           (lookup('template', item.src) | from_yaml).volumes | default({})
         )
       }}
-  loop: "{{ compose_files | sort(attribute='src') }}"
-  vars:
-    service_name: "{{ item.src | dirname | basename }}"
-  when: service_name not in (disabled_compose_files | default([]))
+  loop: "{{ compose_files }}"
 
 - name: Extract networks from compose files
   ansible.builtin.set_fact:
@@ -53,10 +58,7 @@
           (lookup('template', item.src) | from_yaml).networks | default({})
         )
       }}
-  loop: "{{ compose_files | sort(attribute='src') }}"
-  vars:
-    service_name: "{{ item.src | dirname | basename }}"
-  when: service_name not in (disabled_compose_files | default([]))
+  loop: "{{ compose_files }}"
 
 - name: Extract configs from compose files
   ansible.builtin.set_fact:
@@ -67,10 +69,7 @@
           (lookup('template', item.src) | from_yaml).configs | default({})
         )
       }}
-  loop: "{{ compose_files | sort(attribute='src') }}"
-  vars:
-    service_name: "{{ item.src | dirname | basename }}"
-  when: service_name not in (disabled_compose_files | default([]))
+  loop: "{{ compose_files }}"
 
 - name: Extract secrets from compose files
   ansible.builtin.set_fact:
@@ -81,10 +80,8 @@
           (lookup('template', item.src) | from_yaml).secrets | default({})
         )
       }}
-  loop: "{{ compose_files | sort(attribute='src') }}"
-  vars:
-    service_name: "{{ item.src | dirname | basename }}"
-  when: service_name not in (disabled_compose_files | default([]))
+  loop: "{{ compose_files }}"
+
 
 - name: Build combined compose content
   ansible.builtin.set_fact:
