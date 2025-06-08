@@ -1,0 +1,26 @@
+---
+- name: Set friendly variable name ({{ compose_section }})
+  ansible.builtin.set_fact:
+    var_name: "extracted_{{ compose_section }}"
+
+- name: Initialize variable to store extracted data
+  ansible.builtin.set_fact:
+    "{{ var_name }}": {}
+  when: vars.get(var_name) is not defined
+
+- name: Extract {{ compose_section }}
+  ansible.builtin.set_fact:
+    "{{ var_name }}": >-
+      {{
+        vars[var_name] | default({}) |
+        combine(
+          (lookup('template', item.src) | from_yaml)[compose_section] | default({})
+        )
+      }}
+  loop: "{{ compose_files }}"
+  loop_control:
+    label: "{{ item.src | dirname | basename }}"
+
+- name: Print extracted data
+  ansible.builtin.debug:
+    msg: "{{ vars[var_name] | to_nice_json }}"

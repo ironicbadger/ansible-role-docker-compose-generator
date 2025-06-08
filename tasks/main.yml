@@ -27,61 +27,17 @@
   loop_control:
     loop_var: disabled_item
 
-- name: Extract services from compose files
-  ansible.builtin.set_fact:
-    extracted_services: >-
-      {{
-        extracted_services | default({}) |
-        combine(
-          (lookup('template', item.src) | from_yaml).services | default({})
-        )
-      }}
-  loop: "{{ compose_files }}"
-
-- name: Extract volumes from compose files
-  ansible.builtin.set_fact:
-    extracted_volumes: >-
-      {{
-        extracted_volumes | default({}) |
-        combine(
-          (lookup('template', item.src) | from_yaml).volumes | default({})
-        )
-      }}
-  loop: "{{ compose_files }}"
-
-- name: Extract networks from compose files
-  ansible.builtin.set_fact:
-    extracted_networks: >-
-      {{
-        extracted_networks | default({}) |
-        combine(
-          (lookup('template', item.src) | from_yaml).networks | default({})
-        )
-      }}
-  loop: "{{ compose_files }}"
-
-- name: Extract configs from compose files
-  ansible.builtin.set_fact:
-    extracted_configs: >-
-      {{
-        extracted_configs | default({}) |
-        combine(
-          (lookup('template', item.src) | from_yaml).configs | default({})
-        )
-      }}
-  loop: "{{ compose_files }}"
-
-- name: Extract secrets from compose files
-  ansible.builtin.set_fact:
-    extracted_secrets: >-
-      {{
-        extracted_secrets | default({}) |
-        combine(
-          (lookup('template', item.src) | from_yaml).secrets | default({})
-        )
-      }}
-  loop: "{{ compose_files }}"
-
+- name: Extract data from compose files
+  ansible.builtin.include_tasks:
+    file: extract-data.yml
+  loop:
+    - services
+    - networks
+    - volumes
+    - configs
+    - secrets
+  loop_control:
+    loop_var: compose_section
 
 - name: Build combined compose content
   ansible.builtin.set_fact:
