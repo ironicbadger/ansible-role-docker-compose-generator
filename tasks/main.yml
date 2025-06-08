@@ -58,7 +58,3 @@
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
     mode: "0644"
-
-- name: Print combined compose content
-  ansible.builtin.debug:
-    msg: "{{ combined_compose }}"
