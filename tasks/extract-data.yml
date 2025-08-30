@@ -1,0 +1,19 @@
+---
+- name: Extract {{ compose_section }}
+  ansible.builtin.set_fact:
+    extracted_data: >-
+      {{
+        extracted_data | default({}) |
+        combine(
+          (lookup('template', item.src) | from_yaml)[compose_section] | default({}, true)
+        )
+      }}
+  loop: "{{ compose_files }}"
+  loop_control:
+    label: "{{ item.src | dirname | basename }}"
+
+- name: "Save extracted data into a variable (extracted_{{ compose_section }})"
+  ansible.builtin.set_fact:
+    "extracted_{{ compose_section }}": "{{ extracted_data }}"
+    # Clear the temporary variable for the next loop iteration
+    extracted_data: {}
