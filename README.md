@@ -64,6 +64,55 @@ docker_compose_hostname: my-custom-hostname
 By default, the role is looking for services by determining where the `playbook_dir` is and appending `services/`. 
 If your playbooks are for example inside a dedicated playbooks directory you can overwrite the services location by setting `services_directory` either in a task var, group_vars or host_vars.
 
+## Config File Deployment
+
+The role supports deploying configuration files alongside your services using `config-*` directories. This is useful for apps that require config files (like Glance, Prometheus, etc.) that should be managed alongside the compose definition.
+
+### Directory Structure
+
+```
+services/
+└── ansible-hostname1
+    └── monitoring
+        ├── compose.yaml
+        └── config-glance/
+            ├── .dest
+            └── glance.yml
+```
+
+### How It Works
+
+1. Create a `config-<appname>` directory alongside your compose files
+2. Add a `.dest` file containing the destination path on the remote host (supports Ansible variable interpolation)
+3. Add your config files - they will be copied as-is (no templating)
+
+Example `.dest` file:
+```
+{{ appdata_path }}/apps/glance
+```
+
+The role will:
+- Find all `config-*` directories recursively
+- Read the `.dest` file to determine where to copy files
+- Create the destination directory with proper ownership
+- Copy all files (except `.dest`) to the destination
+
+### Optional: ZFS Dataset Creation
+
+If your target host uses ZFS, you can enable automatic dataset creation for config directories:
+
+```yaml
+# group_vars or host_vars
+docker_compose_generator_zfs_enabled: true
+```
+
+When enabled, the role will:
+1. Detect the parent ZFS dataset of the destination path
+2. Create a child dataset for the config directory
+3. The directory is then auto-mounted by ZFS
+
+This provides snapshot and replication benefits for your app configs.
+
 ## v1 of this role vs v2
 
 v1 of this role used a large custom data structure and an ever more complex jinja2 based templating approach. The custom nature of this approach added friction when adding new services and made it difficult to copy/paste from upstream repositories to try things out quickly.

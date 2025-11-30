@@ -12,6 +12,7 @@
           (docker_compose_hostname | default(inventory_hostname))) |
         selectattr('state', 'eq', 'file') |
         selectattr('path', 'regex', '.ya?ml$') |
+        rejectattr('path', 'regex', 'config-[^/]+/') |
         list
       }}
 
@@ -37,3 +38,19 @@
     dest: "{{ docker_compose_generator_output_path }}/compose.yaml"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
+
+- name: Find all config directories
+  find:
+    paths: "{{ services_directory }}{{ docker_compose_hostname | default(inventory_hostname) }}"
+    patterns: "config-*"
+    file_type: directory
+    recurse: yes
+  delegate_to: localhost
+  register: config_dirs
+
+- name: Deploy config files from config-* directories
+  include_tasks: deploy-config.yml
+  loop: "{{ config_dirs.files }}"
+  loop_control:
+    loop_var: config_dir
+  when: config_dirs.files | length > 0
