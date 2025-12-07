@@ -1,6 +1,20 @@
 """Custom filter to indent YAML list items under their parent keys."""
 
-import re
+
+def get_indent(line):
+    """Return the indentation level (number of leading spaces) of a line."""
+    return len(line) - len(line.lstrip())
+
+
+def is_list_key(line):
+    """Check if line is a key that could start a list (ends with : but not ::)."""
+    stripped = line.strip()
+    return stripped.endswith(':') and not stripped.endswith('::')
+
+
+def is_list_item(line):
+    """Check if line is a YAML list item (starts with '- ')."""
+    return line.lstrip().startswith('- ')
 
 
 def indent_yaml_lists(content):
@@ -35,26 +49,26 @@ def indent_yaml_lists(content):
     in_list_block = False
     list_base_indent = 0
 
-    for i, line in enumerate(lines):
+    for line in lines:
         stripped = line.lstrip()
-        current_indent = len(line) - len(stripped)
+        current_indent = get_indent(line)
 
-        # Check if previous line was a key ending with : (start of potential list)
+        # Check if previous line was a key that could start a list
         if result and not in_list_block:
-            prev_stripped = result[-1].strip()
-            if prev_stripped.endswith(':') and not prev_stripped.endswith('::'):
-                prev_indent = len(result[-1]) - len(result[-1].lstrip())
+            prev_line = result[-1]
+            if is_list_key(prev_line):
+                prev_indent = get_indent(prev_line)
                 # If this line is a list item at the same indent level
-                if stripped.startswith('- ') and current_indent == prev_indent:
+                if is_list_item(line) and current_indent == prev_indent:
                     in_list_block = True
                     list_base_indent = prev_indent
 
         if in_list_block:
             # Check if we've left the list block
-            if stripped and not stripped.startswith('- ') and current_indent <= list_base_indent:
+            if stripped and not is_list_item(line) and current_indent <= list_base_indent:
                 in_list_block = False
                 result.append(line)
-            elif stripped.startswith('- ') and current_indent == list_base_indent:
+            elif is_list_item(line) and current_indent == list_base_indent:
                 # List item - add 2 spaces
                 result.append(' ' * (list_base_indent + 2) + stripped)
             elif current_indent == list_base_indent and stripped:

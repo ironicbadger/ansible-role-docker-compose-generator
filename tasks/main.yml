@@ -25,44 +25,16 @@
   when: (item.src | dirname | basename) not in (disabled_compose_files | default([]))
   no_log: true
 
-- name: Merge all configs sections
+- name: Merge all compose sections
   set_fact:
     all_configs: "{{ all_configs | default({}) | combine(item.configs | default({})) }}"
-  loop: "{{ parsed_compose_files }}"
-  loop_control:
-    label: "configs"
-  no_log: true
-
-- name: Merge all networks sections
-  set_fact:
     all_networks: "{{ all_networks | default({}) | combine(item.networks | default({})) }}"
-  loop: "{{ parsed_compose_files }}"
-  loop_control:
-    label: "networks"
-  no_log: true
-
-- name: Merge all volumes sections
-  set_fact:
     all_volumes: "{{ all_volumes | default({}) | combine(item.volumes | default({})) }}"
-  loop: "{{ parsed_compose_files }}"
-  loop_control:
-    label: "volumes"
-  no_log: true
-
-- name: Merge all secrets sections
-  set_fact:
     all_secrets: "{{ all_secrets | default({}) | combine(item.secrets | default({})) }}"
-  loop: "{{ parsed_compose_files }}"
-  loop_control:
-    label: "secrets"
-  no_log: true
-
-- name: Merge all services sections
-  set_fact:
     all_services: "{{ all_services | default({}) | combine(item.services | default({})) }}"
   loop: "{{ parsed_compose_files }}"
   loop_control:
-    label: "services"
+    label: "merging sections"
   no_log: true
 
 - name: Build combined compose content

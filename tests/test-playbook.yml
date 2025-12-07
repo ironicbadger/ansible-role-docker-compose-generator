@@ -85,6 +85,26 @@
         fail_msg: "service details not preserved correctly"
         success_msg: "service details OK"
 
+    - name: Verify unicode content preserved
+      assert:
+        that:
+          - "'unicode-service' in generated_compose.services"
+          - "'unicode-config' in generated_compose.configs"
+          - "generated_compose.services['unicode-service'].labels | length == 2"
+        fail_msg: "unicode content not preserved correctly"
+        success_msg: "unicode content OK"
+
+    - name: Verify output is valid YAML by re-parsing
+      set_fact:
+        reparsed_compose: "{{ generated_compose_raw.content | b64decode | from_yaml }}"
+
+    - name: Verify re-parsed YAML matches original
+      assert:
+        that:
+          - reparsed_compose.services | length == generated_compose.services | length
+        fail_msg: "YAML re-parsing produced different result"
+        success_msg: "YAML validity OK"
+
     - name: Clean up output directory
       file:
         path: "{{ docker_compose_generator_output_path }}"
