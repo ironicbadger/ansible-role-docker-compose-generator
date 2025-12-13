@@ -83,6 +83,7 @@
     file_type: directory
     recurse: yes
   delegate_to: localhost
+  become: false
   register: config_dirs
 
 - name: Deploy config files from config-* directories
