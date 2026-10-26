@@ -55,7 +55,7 @@ services:
     image: lscr.io/linuxserver/librespeed
     container_name: librespeed
     ports:
-      - 8008:80
+      - "8008:80"
     environment:
       - "TZ={{ host_timezone }}"
       - "PASSWORD={{ testpass }}"
@@ -65,6 +65,18 @@ services:
 Notice that variable interpolation is supported. The source of these variables can be either an encryped secrets file via Ansible vault (read more about that [here](https://blog.ktz.me/secret-management-with-docker-compose-and-ansible/) - or see [ironicbadger/infra](https://github.com/ironicbadger/infra) for an implemented example), an `env` file you manually place alongside the `compose.yaml` on the remote host (see [docker compose variable interpolation](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/#interpolation-syntax)), or any other standard Ansible variable source.
 
 Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
+
+### Quote port mappings
+
+Always quote short-form port mappings in source compose files:
+
+```yaml
+ports:
+  - "3000:3000"
+  - "222:22"
+```
+
+The role parses YAML with Ansible's `from_yaml` filter. Its YAML 1.1 parser treats some unquoted mappings as base-60 integers: `222:22` becomes `13342` (`222 * 60 + 22`). Quoting keeps the mapping as a string and preserves both ports in the generated file. See [issue #54](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/54).
 
 By default, if a `compose.yaml` file is found it will be included in the automation, and placed into the output `compose.yaml` on the remote host. This file is placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
 
