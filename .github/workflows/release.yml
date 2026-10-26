@@ -1,9 +1,10 @@
+---
 name: Release
 on:
   workflow_dispatch:
   push:
     tags:
-      - '*'
+      - "*"
 
 env:
   GALAXY_USERNAME: IronicBadger
@@ -14,11 +15,19 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - name: Validate release tag.
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::Release tags must use X.Y.Z without a v prefix (for example, 2.1.2)."
+            exit 1
+          fi
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install Ansible.
         run: pip3 install ansible-core

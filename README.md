@@ -10,6 +10,28 @@ I wrote the following [blog post](https://blog.ktz.me/docker-compose-generator-v
 
 Import this role into your Ansible setup either as a [git submodule](https://blog.ktz.me/git-submodules-for-fun-and-profit-with-ansible/) or via Ansible Galaxy.
 
+### Installing from Ansible Galaxy
+
+Install the latest version:
+
+```sh
+ansible-galaxy role install IronicBadger.docker_compose_generator
+```
+
+Or pin a version in a `requirements.yml` file:
+
+```yaml
+roles:
+  - name: IronicBadger.docker_compose_generator
+    version: 2.1.1
+```
+
+Install with `ansible-galaxy role install -r requirements.yml`.
+
+The former `v2.1.0` and `v2.1.1` tags have been replaced with `2.1.0` and `2.1.1` at the same commits to fix [issue #53](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/53). Update any pins that use the old tag names.
+
+### Compose file layout
+
 In the root of your git repo create a `services` directory and populate it as follows:
 
 ```
@@ -33,7 +55,7 @@ services:
     image: lscr.io/linuxserver/librespeed
     container_name: librespeed
     ports:
-      - 8008:80
+      - "8008:80"
     environment:
       - "TZ={{ host_timezone }}"
       - "PASSWORD={{ testpass }}"
@@ -44,12 +66,30 @@ Notice that variable interpolation is supported. The source of these variables c
 
 Multiple services per compose file are also supported. Useful to run a database alongside an app, for example.
 
+### Quote port mappings
+
+Always quote short-form port mappings in source compose files:
+
+```yaml
+ports:
+  - "3000:3000"
+  - "222:22"
+```
+
+The role parses YAML with Ansible's `from_yaml` filter. Its YAML 1.1 parser treats some unquoted mappings as base-60 integers: `222:22` becomes `13342` (`222 * 60 + 22`). Quoting keeps the mapping as a string and preserves both ports in the generated file. See [issue #54](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/54).
+
 By default, if a `compose.yaml` file is found it will be included in the automation, and placed into the output `compose.yaml` on the remote host. This file is placed under the `docker_compose_generator_output_path` which is the home folder of the ssh user. The role also supports disabling specific compose files by matching the name of the file against a `host_var` or `group_var` file with the following variable:
 
 ```
 disabled_compose_files:
   - jellyfin
 ```
+
+## Release versioning
+
+Use numeric `X.Y.Z` tags without a `v` prefix for future releases (for example, `2.1.2`). The release workflow rejects other tag formats before importing into Galaxy. Manual workflow runs remain available to re-import existing tags after maintenance.
+
+After any tag maintenance, run the Release workflow manually to refresh the versions published in Galaxy, then verify that installation without a version pin succeeds.
 
 ## Custom hostnames
 

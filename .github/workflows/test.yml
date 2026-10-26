@@ -1,3 +1,4 @@
+---
 name: Test Compose Generator
 
 on:
@@ -5,7 +6,6 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -33,6 +33,7 @@ jobs:
         run: |
           cd tests
           ansible-playbook test-playbook.yml -v
+          ansible-playbook test-missing-services.yml -v
 
       - name: Test failed
         if: failure()

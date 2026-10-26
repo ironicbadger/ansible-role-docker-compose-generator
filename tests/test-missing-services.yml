@@ -1,0 +1,85 @@
+---
+- name: Test hosts without a services directory
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create temporary test directory
+      ansible.builtin.tempfile:
+        state: directory
+      register: test_directory
+
+    - name: Verify missing services leave output untouched
+      vars:
+        services_directory: "{{ test_directory.path }}/services/"
+        docker_compose_hostname: missing-host
+        docker_compose_generator_output_path: "{{ test_directory.path }}/output"
+        expected_compose: "services: {}\n"
+      block:
+        - name: Run role without a services directory
+          ansible.builtin.include_role:
+            name: "{{ playbook_dir }}/.."
+
+        - name: Check output directory was not created
+          ansible.builtin.stat:
+            path: "{{ docker_compose_generator_output_path }}"
+          register: missing_output
+
+        - name: Verify no output was created
+          ansible.builtin.assert:
+            that:
+              - not missing_output.stat.exists
+
+        - name: Create existing output directory
+          ansible.builtin.file:
+            path: "{{ docker_compose_generator_output_path }}"
+            state: directory
+
+        - name: Write existing compose file
+          ansible.builtin.copy:
+            content: "{{ expected_compose }}"
+            dest: "{{ docker_compose_generator_output_path }}/compose.yaml"
+
+        - name: Run role with existing output and missing services
+          ansible.builtin.include_role:
+            name: "{{ playbook_dir }}/.."
+
+        - name: Read existing compose file
+          ansible.builtin.slurp:
+            src: "{{ docker_compose_generator_output_path }}/compose.yaml"
+          register: existing_output
+
+        - name: Verify existing compose file was preserved
+          ansible.builtin.assert:
+            that:
+              - existing_output.content | b64decode == expected_compose
+
+        - name: Create services parent directory
+          ansible.builtin.file:
+            path: "{{ services_directory }}"
+            state: directory
+
+        - name: Create a file instead of a host services directory
+          ansible.builtin.copy:
+            content: "not a directory\n"
+            dest: "{{ services_directory }}{{ docker_compose_hostname }}"
+
+        - name: Run role when the services path is a file
+          ansible.builtin.include_role:
+            name: "{{ playbook_dir }}/.."
+
+        - name: Read compose file after services file check
+          ansible.builtin.slurp:
+            src: "{{ docker_compose_generator_output_path }}/compose.yaml"
+          register: file_path_output
+
+        - name: Verify services file did not change output
+          ansible.builtin.assert:
+            that:
+              - file_path_output.content | b64decode == expected_compose
+      always:
+        - name: Remove temporary test directory
+          ansible.builtin.file:
+            path: "{{ test_directory.path }}"
+            state: absent
