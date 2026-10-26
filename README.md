@@ -10,6 +10,28 @@ I wrote the following [blog post](https://blog.ktz.me/docker-compose-generator-v
 
 Import this role into your Ansible setup either as a [git submodule](https://blog.ktz.me/git-submodules-for-fun-and-profit-with-ansible/) or via Ansible Galaxy.
 
+### Installing from Ansible Galaxy
+
+Install the latest version:
+
+```sh
+ansible-galaxy role install IronicBadger.docker_compose_generator
+```
+
+Or pin a version in a `requirements.yml` file:
+
+```yaml
+roles:
+  - name: IronicBadger.docker_compose_generator
+    version: 2.1.1
+```
+
+Install with `ansible-galaxy role install -r requirements.yml`.
+
+The former `v2.1.0` and `v2.1.1` tags have been replaced with `2.1.0` and `2.1.1` at the same commits to fix [issue #53](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/53). Update any pins that use the old tag names.
+
+### Compose file layout
+
 In the root of your git repo create a `services` directory and populate it as follows:
 
 ```
@@ -50,6 +72,12 @@ By default, if a `compose.yaml` file is found it will be included in the automat
 disabled_compose_files:
   - jellyfin
 ```
+
+## Release versioning
+
+Use numeric `X.Y.Z` tags without a `v` prefix for future releases (for example, `2.1.2`). The release workflow rejects other tag formats before importing into Galaxy. Manual workflow runs remain available to re-import existing tags after maintenance.
+
+After any tag maintenance, run the Release workflow manually to refresh the versions published in Galaxy, then verify that installation without a version pin succeeds.
 
 ## Custom hostnames
 
