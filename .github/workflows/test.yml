@@ -33,6 +33,7 @@ jobs:
         run: |
           cd tests
           ansible-playbook test-playbook.yml -v
+          ansible-playbook test-missing-services.yml -v
 
       - name: Test failed
         if: failure()
