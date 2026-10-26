@@ -13,7 +13,7 @@
 
   pre_tasks:
     - name: Gather minimal facts
-      setup:
+      ansible.builtin.setup:
         gather_subset:
           - "!all"
           - user
@@ -23,16 +23,16 @@
 
   post_tasks:
     - name: Read generated compose file
-      slurp:
+      ansible.builtin.slurp:
         src: "{{ docker_compose_generator_output_path }}/compose.yaml"
       register: generated_compose_raw
 
     - name: Parse generated compose file
-      set_fact:
+      ansible.builtin.set_fact:
         generated_compose: "{{ generated_compose_raw.content | b64decode | from_yaml }}"
 
     - name: Verify configs section exists
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.configs is defined
           - "'test-config' in generated_compose.configs"
@@ -41,7 +41,7 @@
         success_msg: "configs section OK"
 
     - name: Verify networks section exists
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.networks is defined
           - "'test-network' in generated_compose.networks"
@@ -50,7 +50,7 @@
         success_msg: "networks section OK"
 
     - name: Verify volumes section exists
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.volumes is defined
           - "'test-volume' in generated_compose.volumes"
@@ -59,7 +59,7 @@
         success_msg: "volumes section OK"
 
     - name: Verify secrets section exists
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.secrets is defined
           - "'test-secret' in generated_compose.secrets"
@@ -68,7 +68,7 @@
         success_msg: "secrets section OK"
 
     - name: Verify services section exists
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.services is defined
           - "'test-service' in generated_compose.services"
@@ -77,7 +77,7 @@
         success_msg: "services section OK"
 
     - name: Verify service details preserved
-      assert:
+      ansible.builtin.assert:
         that:
           - generated_compose.services['test-service'].image == 'nginx:latest'
           - generated_compose.services['test-service'].container_name == 'test-service'
@@ -86,7 +86,7 @@
         success_msg: "service details OK"
 
     - name: Verify unicode content preserved
-      assert:
+      ansible.builtin.assert:
         that:
           - "'unicode-service' in generated_compose.services"
           - "'unicode-config' in generated_compose.configs"
@@ -95,21 +95,21 @@
         success_msg: "unicode content OK"
 
     - name: Verify output is valid YAML by re-parsing
-      set_fact:
+      ansible.builtin.set_fact:
         reparsed_compose: "{{ generated_compose_raw.content | b64decode | from_yaml }}"
 
     - name: Verify re-parsed YAML matches original
-      assert:
+      ansible.builtin.assert:
         that:
           - reparsed_compose.services | length == generated_compose.services | length
         fail_msg: "YAML re-parsing produced different result"
         success_msg: "YAML validity OK"
 
     - name: Clean up output directory
-      file:
+      ansible.builtin.file:
         path: "{{ docker_compose_generator_output_path }}"
         state: absent
 
     - name: All tests passed
-      debug:
+      ansible.builtin.debug:
         msg: "All compose generator tests passed successfully!"
