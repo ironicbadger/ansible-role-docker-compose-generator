@@ -41,4 +41,5 @@
     dest: "{{ config_dest }}/{{ item.path | basename }}"
     owner: "{{ docker_compose_generator_uid }}"
     group: "{{ docker_compose_generator_gid }}"
+    mode: preserve
   loop: "{{ config_files.files }}"
